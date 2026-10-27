@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Knowledge Check — A Day in Bill4Time &amp; UKG</title>
+<style>
+:root{--blue:#1f4e9e;--blue-d:#18408a;--pale:#c9d6e8;--bg:#e8edf3;--red:#8e1b1b;--green:#1d5e2a;--amber:#f59e0b;--line:#d5dbe4;--ink:#1f2937;--mute:#6b7280;--app:#2a4a9c;--btn:#3772db}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font:13px/1.45 "Segoe UI",Arial,sans-serif;color:var(--ink);padding:12px}
+.app{position:relative;max-width:1260px;margin:0 auto}
+
+/* banner */
+.banner{border-radius:4px;overflow:hidden;border:1px solid #9fb2cf;margin-bottom:10px;background:#fff}
+.bt{background:var(--blue);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.bt h1{font-size:16px;margin:0;flex:1;min-width:240px}
+.pill{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);border-radius:12px;padding:2px 12px;font-size:11px;font-weight:600}
+.seg{display:inline-flex;background:rgba(0,0,0,.22);border-radius:14px;padding:2px}
+.seg button{border:0;background:transparent;color:#dbe6f7;font:600 11px "Segoe UI",Arial;padding:4px 12px;border-radius:12px;cursor:pointer}
+.seg button.on{background:#fff;color:var(--blue)}
+.scn{background:#fff8e1;border-top:1px solid #f0d77a;border-left:6px solid var(--amber);padding:9px 14px;font-size:13.5px}
+.scn small{display:block;font-size:10.5px;font-weight:800;letter-spacing:.12em;color:#b45309}
+.bsub{background:var(--pale);padding:8px 16px;font-size:12.5px}
+.parts{display:flex;gap:6px;flex-wrap:wrap;padding:8px 16px;background:#f3f6fb;border-top:1px solid #d5dfef}
+.pt{font-size:11px;font-weight:600;padding:2px 10px;border-radius:12px;background:#eef1f6;color:#6b7280;border:1px solid #d5dbe4}
+.pt.cur{background:#e0ebfb;color:var(--blue);border-color:#9db8e6}
+.pt.ok{background:#e6f6e8;color:var(--green);border-color:#7fc58a}
+.bar{height:5px;background:#dfe6f1}.bar i{display:block;height:100%;background:var(--blue);transition:width .3s}
+
+/* layout */
+.main{display:grid;grid-template-columns:260px 1fr;gap:14px;align-items:start}
+@media(max-width:900px){.main{grid-template-columns:1fr}}
+.left{position:sticky;top:8px}
+@media(max-width:900px){.left{position:static}}
+.card{background:#fff;border:1px solid var(--line);border-radius:4px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.ch{display:flex;align-items:center;gap:8px;color:#fff;padding:9px 12px;font-weight:700;font-size:13px}
+.ch.red{background:var(--red)}.ch.blue{background:var(--blue)}.ch.green{background:var(--green)}
+.num{min-width:22px;height:22px;border-radius:11px;background:rgba(255,255,255,.25);display:grid;place-items:center;font-size:11px;flex:none;padding:0 4px}
+.cb{padding:12px;font-size:12.5px}
+.cb p{margin:0 0 8px}.cb b.k{color:var(--blue)}
+.do{border:2px solid var(--blue);border-radius:6px;background:#f3f7fd;padding:8px 10px;margin:4px 0 9px}
+.do.watch{border-style:dashed}
+.do .lbl{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--blue);display:block;margin-bottom:2px}
+.do .act{font-weight:700;font-size:13.5px;color:#10264d}
+.checks{list-style:none;margin:6px 0 0;padding:0}
+.checks li{display:flex;gap:7px;margin:3px 0;color:#374151}
+.checks li::before{content:"";width:14px;height:14px;border:2px solid #9ca3af;border-radius:3px;flex:none;margin-top:1px}
+.checks li.on{color:var(--green);font-weight:600}
+.checks li.on::before{background:#3a9a4a;border-color:#3a9a4a;content:"✓";color:#fff;font-size:10px;line-height:10px;text-align:center}
+.tip{background:#fff7d6;border:1px solid #f0d77a;border-radius:4px;padding:7px 9px;font-size:12px;margin-top:8px}
+.tip.warn{background:#fff3cd}
+.fb{border-radius:4px;padding:7px 9px;margin-top:9px;font-size:12px;display:none}
+.fb.show{display:block}
+.fb.ok{background:#e6f6e8;border:1px solid #3a9a4a;color:#14532d}
+.fb.no{background:#fff1f1;border:1px solid #c9363e;color:#7f1d1d}
+.fb.info{background:#eef4ff;border:1px solid #9db8e6;color:#1e3a8a}
+.hints{display:flex;gap:6px;margin-top:9px}
+.hints button{flex:1;font:600 11.5px "Segoe UI",Arial;padding:5px 6px;border:1px solid #b8c4d8;background:#fff;color:var(--blue);border-radius:4px;cursor:pointer}
+.hints button:hover{background:#eef4ff}
+.hintbox{display:none;margin-top:7px;font-size:12px;color:#334155;background:#f8fafc;border-left:3px solid var(--blue);padding:5px 8px}
+.hintbox.show{display:block}
+.nav{display:flex;gap:10px;margin-top:10px}
+.nav button{flex:1;padding:8px 6px;border-radius:3px;font:600 13px "Segoe UI",Arial;cursor:pointer;border:1px solid #b5bdc9;background:#fff;color:#374151}
+.nav button.next{background:var(--blue);border-color:var(--blue-d);color:#fff}
+.nav button:disabled{opacity:.45;cursor:not-allowed}
+.nav button.ready{animation:glow 1.3s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:0 0 0 5px rgba(31,78,158,.28)}}
+
+/* browser frame */
+.frame{border:1px solid #8d99ad;border-radius:6px;overflow:hidden;background:#fff;box-shadow:0 3px 10px rgba(0,0,0,.15)}
+.ftabs{display:flex;align-items:flex-end;gap:4px;background:#d3d9e3;padding:6px 8px 0}
+.ftab{padding:6px 16px;border-radius:7px 7px 0 0;background:#bcc5d3;color:#4b5563;font-size:12px;font-weight:600;border:0;cursor:pointer}
+.ftab.on{background:#fff;color:#1f2937}
+.sim-flag{margin-left:auto;margin-bottom:5px;font-size:10px;font-weight:800;letter-spacing:.1em;color:#7c2d12;background:#ffedd5;border:1px solid #fdba74;border-radius:10px;padding:1px 9px}
+.viewport{position:relative;overflow:hidden;background:#fff}
+.sim{position:absolute;left:0;top:0;width:1000px;transform-origin:0 0;min-height:620px;font-family:Arial,"Segoe UI",sans-serif}
+
+.sc{display:none;min-height:620px}
+/* login */
+#sc-login{background:#e1e1e1;padding-top:34px;text-align:center}
+.lg-logo{font-size:20px;letter-spacing:.35em;color:#444;margin-bottom:22px;font-weight:300}
+.lg-card{display:inline-flex;width:752px;height:480px;text-align:left;background:#fff}
+.lg-l{width:376px;padding:30px 46px}
+.lg-l h2{font-weight:300;color:#888;text-align:center;font-size:24px;margin:0 0 24px}
+.ff{position:relative;margin-bottom:12px}
+.ff label{position:absolute;top:-7px;left:9px;background:#fff;padding:0 4px;font-size:10px;color:#666}
+.ff input{width:100%;height:32px;border:1px solid #bbb;border-radius:3px;padding:6px 10px;font-size:12px;color:#222;background:#fff}
+.ff input:read-only{background:#fff}
+.ff input.edit{border-color:#3772db}
+.eye{position:absolute;right:9px;top:5px;background:none;border:0;cursor:pointer;font-size:15px;color:#444}
+.rm{display:flex;gap:8px;align-items:center;font-size:12px;margin:14px 0 34px}
+.rm i{width:14px;height:14px;border-radius:2px;background:#3772db;color:#fff;font-size:10px;display:grid;place-items:center;font-style:normal}
+.bigbtn{width:100%;height:34px;background:#3772db;color:#fff;border:0;border-radius:2px;font-size:11px;font-weight:700;cursor:pointer}
+.lnk{font-size:10px;color:#555;text-align:right;margin-top:14px}
+.lnk div{margin-bottom:8px}
+.newto{margin-top:50px;text-align:center;font-size:11px;color:#555;border-top:1px solid #ccc;position:relative}
+.newto span{position:relative;top:-8px;background:#fff;padding:0 10px}
+.ca{height:36px;background:#e5e5e5;color:#999;text-align:center;line-height:36px;font-size:11px;margin-top:-4px}
+.lg-r{width:376px;background:linear-gradient(160deg,#07124a,#0b1f7a);color:#fff;padding:40px 36px;text-align:center}
+.lg-r h3{font-size:26px;line-height:1.1;margin:22px 0 14px}
+.lg-r p{font-size:13px;opacity:.9}
+.lg-r .safe{background:#ef4444;color:#fff;font-weight:800;letter-spacing:.06em;font-size:11px;padding:10px 14px;border-radius:3px;display:inline-block;margin-top:24px}
+.lg-foot{font-size:10px;color:#888;margin-top:14px;text-align:center}
+
+/* b4 app */
+.apph{background:var(--app);height:42px;display:flex;align-items:center;padding:0 70px 0 72px;position:relative;color:#fff}
+.mm{position:absolute;left:72px;top:3px;background:#f6c400;color:#111;border:2px solid #111;font-weight:900;font-size:17px;padding:2px 6px;letter-spacing:-.5px}
+.apph .usr{margin-left:auto;font-size:10px;display:flex;gap:12px;align-items:center}
+.apph .srch{background:#223c82;padding:4px 10px;border-radius:3px;font-size:10px;width:150px;color:#c5d0ee}
+.appnav{display:flex;gap:0;padding:8px 72px 0;border-bottom:1px solid #ddd;font-size:9.5px;font-weight:700;color:#333;background:#f4f4f4;justify-content:space-between}
+.appnav span{padding:0 0 8px;cursor:pointer;border-bottom:2px solid transparent}
+.appnav span.on{border-bottom-color:var(--app);color:#111}
+.pg{padding:20px 72px 30px;background:#fff}
+.pg h2{margin:0;font-size:17px;font-weight:700}
+.prow{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.pbtn{display:flex;gap:4px}
+.pbtn button{background:#3772db;color:#fff;border:0;border-radius:2px;font-size:10px;font-weight:700;padding:9px 11px;cursor:pointer}
+.grid6{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:22px}
+.w{border:1px solid #ddd;border-top:2px solid var(--app);background:#fff;height:318px;font-size:10px;overflow:hidden}
+.w.sm{height:318px}
+.w h4{margin:0;padding:9px 10px;font-size:10.5px;font-weight:500;background:#f7f7f7;display:flex;justify-content:space-between;color:#333}
+.w .wb{padding:8px 10px}
+.fld2{border:1px solid #cfcfcf;background:#fff;height:26px;margin:7px 0;padding:5px 7px;color:#999;font-size:10px;display:flex;justify-content:space-between}
+.ml{border-bottom:1px solid #eee;padding:6px 0;font-size:10px;position:relative}
+.ml b{display:block;font-weight:600;font-size:10px;color:#222}
+.ml span{color:#555;font-size:9px}
+.ml em{float:right;font-style:normal;font-size:9px;color:#777}
+.ml i{position:absolute;right:0;top:9px;width:11px;height:11px;border-radius:50%;background:#666}
+.hrow{display:grid;grid-template-columns:34px 1fr;align-items:center;font-size:9px;height:21px;color:#333}
+.hrow div{position:relative;height:9px;border-left:1px solid #ccc}
+.hrow div i{position:absolute;left:0;top:0;height:9px;background:#5aa0f2}
+.hrow div u{position:absolute;left:5px;top:-2px;text-decoration:none;font-size:9px}
+.re{padding:6px 0;border-bottom:1px solid #eee;font-size:10px}
+.re .d{display:flex;justify-content:space-between;background:#f2f2f2;margin:0 -10px;padding:3px 10px;font-size:9px;color:#555}
+.re b{display:block;font-weight:600}
+.re .r2{display:flex;justify-content:space-between;color:#555;font-size:9px}
+.ph{display:grid;place-items:center;height:210px;color:#8b8b8b;text-align:center;font-size:10px;padding:0 20px}
+.ph i{width:72px;height:72px;border-radius:50%;background:#3b7ae0;display:block;margin:0 auto 12px}
+
+/* modal */
+.modal{position:absolute;inset:0;background:rgba(0,0,0,.45);display:none;justify-content:center;align-items:flex-start;padding-top:18px;z-index:10}
+.mbox{background:#fff;width:830px;box-shadow:0 8px 30px rgba(0,0,0,.4);position:relative}
+.mh{background:var(--app);color:#fff;font-weight:700;font-size:13px;padding:0 14px;height:36px;display:flex;align-items:center;justify-content:space-between}
+.mh .tm{font-size:15px;display:flex;gap:8px;align-items:center;font-weight:600}
+.mh .tm i{width:20px;height:20px;border-radius:50%;border:2px solid #fff;display:inline-grid;place-items:center;font-size:9px;font-style:normal}
+.mtag{font-size:10px;font-weight:800;letter-spacing:.08em;color:#6b7280;padding:6px 20px 0;min-height:22px}
+.mf{display:grid;grid-template-columns:1fr 1fr;gap:0 40px;padding:6px 20px}
+.r{display:grid;grid-template-columns:120px 1fr;align-items:center;gap:6px;margin:7px 0;min-height:24px;font-size:11px;color:#222}
+.r label{font-weight:600;font-size:11px}
+.r select,.r input[type=text],.r textarea{width:100%;font:11px Arial;border:1px solid #bbb;padding:3px 6px;height:24px;background:#fff;color:#111}
+.r select:disabled,.r input:read-only:not(.ro){background:#c7d6e4;color:#667}
+.r input.ro{background:#d9d9d9;color:#555}
+.r input.edit,.r select.edit,.r textarea.edit{background:#fff;border-color:#3772db;box-shadow:0 0 0 1px #3772db}
+.rw{display:flex;gap:8px;align-items:center}
+.rw select{flex:1}
+.rw b{font-size:17px;color:#444}
+.desc{padding:0 20px}
+.desc textarea{width:100%;height:68px;background:#d3dfeb;border:1px solid #bbb;font:11px Arial;padding:6px;resize:none}
+.desc textarea.edit{background:#fff;border-color:#3772db;box-shadow:0 0 0 1px #3772db}
+.cc{text-align:right;font-size:10px;color:#aaa;font-weight:700;padding-right:6px}
+.shw{font-size:10.5px;display:flex;gap:6px;align-items:center;margin:4px 0 10px}
+.lab{display:flex;gap:8px;align-items:center}
+.lab input{flex:1}
+.bdg{font-size:9px;font-weight:700;line-height:1.15;border-radius:10px;padding:3px 7px;border:1px solid;width:66px;display:none}
+.bdg.bad{display:block;background:#ffe2e2;color:#9b1c1c;border-color:#e08a8a}
+.bdg.ok{display:block;background:#e6f6e8;color:#166534;border-color:#7fc58a}
+.gt{font-size:10px;color:#3772db;margin-left:8px;cursor:default}
+.mfoot{display:flex;justify-content:flex-end;gap:7px;padding:12px 20px;background:#eee;border-top:1px solid #ddd;margin-top:14px}
+.mb{background:var(--btn);color:#fff;border:0;border-radius:2px;font-size:11px;font-weight:700;padding:8px 13px;cursor:pointer}
+.mb.gray{background:#9a9a9a}
+/*tm*/.r input.tm:read-only{background:#fff}
+input.bad{background:#fde8e8!important;border-color:#c9363e!important;color:#8e1b1b!important;font-weight:700}
+input.good{background:#e6f6e8!important;border-color:#3a9a4a!important;color:#14532d!important;font-weight:700}
+.pressed{transform:scale(.96);filter:brightness(.85)}
+.pulse{animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 2px rgba(245,158,11,.95),0 0 0 0 rgba(245,158,11,0)}50%{box-shadow:0 0 0 2px rgba(245,158,11,1),0 0 0 8px rgba(245,158,11,.3)}}
+td.pulse,tr.pulse td{animation:none;outline:3px solid var(--amber);outline-offset:-3px;background:#fff3d6!important}
+
+/* list + ukg tables */
+.tcard{border:1px solid #9fb2cf;border-radius:4px;overflow:hidden}
+.th{background:#1f3a6e;color:#fff;font-weight:700;font-size:11px;padding:8px 12px;letter-spacing:.04em}
+.tabs{display:flex;gap:2px;padding:6px 8px 0;background:#f7f9fc;border-bottom:1px solid var(--line);font-size:11px}
+.tab{padding:5px 9px;border-radius:4px 4px 0 0;color:#475569}
+.tab.on{background:#1c64d0;color:#fff;font-weight:600}
+.tab .n{background:#d5dbe4;border-radius:9px;font-size:9px;font-weight:700;padding:0 5px;margin-left:3px;color:#334}
+.tab.on .n{background:#fff;color:#1c64d0}
+table.t{border-collapse:collapse;width:100%}
+.t th{font-size:10px;color:#475569;padding:6px 6px;border-bottom:1px solid var(--line);background:#fafbfd;text-align:center}
+.t td{padding:7px 6px;font-size:10.5px;border-bottom:1px solid #edf0f5;text-align:center}
+.t td.l,.t th.l{text-align:left}
+.t tr.en{cursor:pointer}.t tr.en:hover td{background:#f5f8fe}
+.t tr.tot td{background:#f2f4f7;font-weight:700;cursor:pointer}
+.t tr.tot.wk td{background:#e9ecf1}
+.t tr.found td{background:#e6f6e8!important;color:#14532d}
+.callout{background:#1f3a6e;color:#fff;padding:10px 14px;font-size:11.5px;display:none}
+.callout.show{display:block}
+.callout.u{background:#2b5a96}
+.ukg{display:flex;background:#fff;min-height:620px;font-family:"Segoe UI",Arial,sans-serif}
+.usb{width:150px;background:#e9edf3;padding:14px 10px;font-size:10.5px;color:#333}
+.usb .av{display:flex;align-items:center;gap:8px;margin-bottom:16px;font-size:13px}
+.usb .av i{width:30px;height:30px;border-radius:8px;background:#cfdcf3;display:grid;place-items:center;font-style:normal;font-weight:700;color:#233;font-size:11px}
+.usb div{padding:5px 6px;border-radius:5px}
+.usb .on{background:#d5dbe4;font-weight:600}
+.umain{flex:1;padding:10px 14px}
+.uh{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.uh .mm2{background:#f6c400;border:2px solid #111;font-weight:900;font-size:14px;padding:1px 6px;color:#111}
+.uh .tf{margin-left:auto;font-size:10px;color:#555}
+.uh .tf b{border:1px solid #bbb;border-radius:4px;padding:3px 8px;color:#111;font-weight:500}
+.ut{border-collapse:collapse;width:100%;font-size:10px}
+.ut th{border:1px solid #bbb;padding:7px 4px;background:#fff;font-weight:600;text-align:center}
+.ut td{border:1px solid #d7d7d7;padding:7px 5px;text-align:center;color:#222}
+.ut td.pu{color:#8b3fc4}
+.ut tr.fut td{background:#e5e5e5;color:#555}
+.ut tr.blank td{background:#f4f4f4}
+.ut tr.today td{font-weight:600}
+.ut td.dly{cursor:pointer}
+.ut td.l{text-align:left;padding-left:8px}
+.tdp{background:#1f3a6e;color:#fff;font-size:8px;font-weight:700;border-radius:8px;padding:1px 6px;margin-left:5px}
+.ut tr.found td.dly{background:#2e9b4a!important;color:#fff;font-weight:700}
+
+/* gap + quiz */
+.plain{background:#f1f4f9;padding:26px 60px}
+.cmp{background:#fff;border:1px solid #9fb2cf;border-radius:6px;overflow:hidden}
+.cmp-h{background:#1f3a6e;color:#fff;font-weight:700;font-size:12.5px;padding:8px 14px}
+.cmp-b{display:grid;grid-template-columns:1fr 1fr 1.15fr 1.25fr}
+.cmp-b>div{padding:16px 12px;border-left:1px solid var(--line);text-align:center}
+.cmp-b>div:first-child{border-left:0}
+.big{font-size:30px;font-weight:700;color:#1f3a6e;line-height:1.1}
+.cmp-b small{display:block;color:#7b8494;font-size:10px;letter-spacing:.06em;font-weight:700;margin-top:3px}
+.cmp-b .s{display:block;font-size:11.5px;color:#4b5563;margin-top:2px}
+.why{text-align:left!important;font-size:12px}.why b{display:block;margin-bottom:3px}
+.gi{display:flex;gap:5px;justify-content:center;margin-top:4px}
+.gi input{width:80px;font:700 18px Arial;text-align:center;border:2px solid #bbb;border-radius:5px;padding:4px;background:#eee}
+.gi input.edit{background:#fff;border-color:var(--amber)}
+.gi button{background:#2b5a96;color:#fff;border:0;border-radius:4px;padding:7px 10px;font-weight:600;cursor:pointer;font-size:12px}
+.badge{display:inline-block;margin-top:7px;background:#e6f6e8;border:1px solid #7fc58a;color:var(--green);font-weight:600;font-size:11.5px;border-radius:4px;padding:3px 10px}
+.warn{display:none;gap:10px;background:#fff7ed;border:1px solid #f0b36a;border-radius:6px;padding:11px 14px;margin-top:14px;font-size:12.5px}
+.warn.show{display:flex}
+.dim{opacity:.3}
+.kc{background:#fff;border:1px solid #9fb2cf;border-radius:6px;overflow:hidden}
+.kc-h{background:#1f3a6e;color:#fff;font-weight:700;font-size:12.5px;padding:8px 14px}
+.q{padding:12px 14px;border-bottom:1px solid var(--line)}.q:last-child{border-bottom:0}
+.q p{margin:0 0 8px}
+.mini{display:flex;gap:16px;margin-bottom:9px}
+.mini div{background:#f1f5fb;border:1px solid #d5dfef;border-radius:5px;padding:5px 12px;text-align:center}
+.mini b{display:block;font-size:16px;color:#1f3a6e}.mini small{font-size:10px;color:#6b7280;font-weight:700}
+.ans{display:flex;gap:8px}
+.ans button{flex:1;max-width:210px;font:600 12px "Segoe UI",Arial;padding:7px 10px;border:1px solid #b8c4d8;background:#fff;border-radius:5px;cursor:pointer}
+.ans button.right{background:#e6f6e8;border-color:#3a9a4a;color:var(--green)}
+.ans button.wrong{background:#fff1f1;border-color:#c9363e;color:#8e1b1b}
+.qf{display:none;margin-top:8px;font-size:12px;padding:6px 9px;border-radius:4px}
+.qf.show{display:block}.qf.ok{background:#e6f6e8;color:#14532d}.qf.no{background:#fff1f1;color:#7f1d1d}
+
+.toast{position:absolute;left:50%;bottom:16px;transform:translate(-50%,10px);background:#111827;color:#fff;font-size:12px;padding:8px 14px;border-radius:6px;opacity:0;transition:.25s;pointer-events:none;z-index:30;max-width:90%;text-align:center}
+.toast.show{opacity:.96;transform:translate(-50%,0)}
+.end{position:absolute;inset:0;background:rgba(255,255,255,.97);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;z-index:40}
+.end.show{display:flex}
+.end .bg{width:60px;height:60px;border-radius:50%;background:#3a9a4a;color:#fff;font-size:34px;display:grid;place-items:center;margin-bottom:10px}
+.end h2{margin:0 0 6px;color:var(--green);font-size:22px}
+.recap{margin:14px 0;border:1px solid var(--line);border-radius:6px;min-width:420px;text-align:left;font-size:13px}
+.recap div{padding:7px 14px;display:flex;justify-content:space-between;gap:20px}.recap div+div{border-top:1px solid var(--line)}
+.end .acts{display:flex;gap:8px}
+.end .acts button{padding:8px 16px;border-radius:4px;font:600 12.5px "Segoe UI",Arial;cursor:pointer;border:1px solid #b5bdc9;background:#fff}
+.end .acts .p{background:var(--blue);color:#fff;border-color:var(--blue-d)}
+
+.choose{position:absolute;inset:0;background:rgba(232,237,243,.98);z-index:50;display:flex;justify-content:center;padding-top:24px;border-radius:4px}
+.choose.hide{display:none}
+.choose .box{max-width:640px;width:100%;text-align:center}
+.choose h2{margin:0 0 4px;color:var(--blue);font-size:20px}
+.choose p{margin:0 0 16px;color:#475569}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.opts{grid-template-columns:1fr}}
+.opt{background:#fff;border:2px solid var(--line);border-radius:8px;padding:18px 14px;cursor:pointer;text-align:left;font:inherit;color:inherit}
+.opt:hover,.opt:focus-visible{border-color:var(--blue);box-shadow:0 4px 14px rgba(31,78,158,.18);outline:none}
+.opt .ic{font-size:26px;display:block;margin-bottom:6px}
+.opt b{display:block;font-size:15px;color:var(--blue);margin-bottom:4px}
+.opt span{color:#475569;font-size:12.5px}
+.opt em{display:inline-block;margin-top:8px;font-style:normal;font-size:11px;font-weight:700;color:#166534;background:#e6f6e8;border-radius:10px;padding:2px 9px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+#back{display:none}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+<div class="banner">
+  <div class="bt">
+    <h1>Knowledge Check — A Day in Bill4Time &amp; UKG</h1>
+    
+    <span class="pill" id="pill">Step 1 of 18</span>
+  </div>
+  <div class="scn"><small>THE SCENARIO</small><b>Tuesday, October 27:</b> You work <b>9:00 AM – 5:00 PM</b>. This morning you worked on a court submission for <b>Rajesh Patel</b> (case SLS-2026-0441) from <b>9:00am to 1:30pm</b>. Log in, enter that time correctly, then check your day against UKG.</div>
+  <div class="bsub" id="bsub"></div>
+  <div class="parts" id="parts"></div>
+  <div class="bar"><i id="barfill"></i></div>
+</div>
+
+<div class="main">
+  <div class="left">
+    <div class="card"><div class="ch blue" id="ch"><span class="num" id="cn">1</span><span id="ct"></span></div><div class="cb" id="cb"></div></div>
+    <div class="nav"><button type="button" id="back">← Back</button><button type="button" id="next" class="next">Next →</button></div>
+  </div>
+
+  <div class="frame" id="frame">
+    <div class="ftabs"><button class="ftab on" id="tabB4" type="button">Bill4Time</button><button class="ftab" id="tabUKG" type="button">UKG</button><span class="sim-flag">TRAINING SIMULATION</span></div>
+    <div class="viewport" id="vp">
+      <div class="sim" id="sim">
+
+        <!-- LOGIN -->
+        <div class="sc" id="sc-login">
+          <div class="lg-logo">▞▞ BILL4TIME</div>
+          <div class="lg-card">
+            <div class="lg-l">
+              <h2>Sign In</h2>
+              <div class="ff"><label>Company ID</label><input value="Morgan" readonly tabindex="-1"></div>
+              <div class="ff"><label>User Name</label><input value="your.name@company.com" readonly tabindex="-1"></div>
+              <div class="ff"><input id="pw" type="password" placeholder="Password" autocomplete="off" aria-label="Practice password" readonly><button class="eye" id="eye" type="button" title="Show/hide password" tabindex="-1">👁</button></div>
+              <div class="rm"><i>✓</i> Remember Me</div>
+              <button class="bigbtn" id="btnLogin" type="button">Log In</button>
+              <div class="lnk"><div>Forgot Company ID or User Name?</div><div>Forgot Password?</div></div>
+              <div class="newto"><span>New to Bill4Time?</span></div>
+              <div class="ca">Create Account</div>
+            </div>
+            <div class="lg-r"><div style="font-size:11px;letter-spacing:.2em;opacity:.8">PRACTICE SCREEN</div><h3>Practice signing in safely</h3><p>Everything on this page is a training simulation. Type any practice text in the password box.</p><p><b>Never type your real password here.</b></p><span class="safe">LOG IN TO CONTINUE</span></div>
+          </div>
+          <div class="lg-foot">About Bill4Time &nbsp;|&nbsp; Privacy Policy &nbsp;|&nbsp; Security Statement</div>
+        </div>
+
+        <!-- DASHBOARD -->
+        <div class="sc" id="sc-dash">
+          <div class="apph"><span class="mm">MORGAN &amp; MORGAN</span><div class="usr"><span>Test Account ▾</span><span>⊕ ✔ ? ◷</span><span class="srch">Search</span></div></div>
+          <div class="appnav" id="appnav"><span class="on" data-n="dash">DASHBOARD</span><span data-n="clients">CLIENTS</span><span data-n="matters">MATTERS</span><span data-n="time" id="navTime">TIME &amp; EXPENSES</span><span data-n="tasks">TASKS</span><span data-n="docs">DOCUMENT STORAGE</span><span data-n="cal">CALENDAR</span><span data-n="inv">INVOICING</span><span data-n="stm">STATEMENTS</span><span data-n="rep">REPORTS</span><span data-n="acc">ACCOUNTING</span></div>
+          <div class="pg">
+            <div class="prow"><h2>Morgan and Morgan Complex Litigation Group (MORGAN)</h2>
+              <div class="pbtn"><button id="btnAddTime" type="button">Add Time</button><button data-w="bulk" type="button">Add Bulk Time</button><button data-w="exp" type="button">Add Expense</button><button data-w="set" type="button">Dashboard Settings ⚙</button></div></div>
+            <div class="grid6">
+              <div class="w" id="quick"><h4>Time Entry</h4><div class="wb"><div style="display:flex;justify-content:space-between;font-size:10px">10/27/2026 ▦ <span>Test Account ▾</span></div><div class="fld2"><span>Client</span>⌄</div><div class="fld2"><span>Search</span>⌄</div><div class="fld2"><span>Activity</span>⌄</div><div class="fld2"><span>Description</span></div><div style="display:flex;gap:8px;align-items:center;font-size:10px;margin-top:8px">Hours: <div class="fld2" style="flex:1;margin:0"><span>0.00</span></div></div><div style="text-align:right;color:#999;font-size:10px;margin-top:10px">▢ Save &nbsp; <span style="color:#3772db">↻ Clear</span></div></div></div>
+              <div class="w"><h4>My Recent Matters <span>⧉</span></h4><div class="wb">
+                <div class="ml"><b>Baby Formula-SLS Ops</b><span>SLS Operations</span><em>Yesterday</em><i></i></div>
+                <div class="ml"><b>Baby Formula-SLS Ops</b><span>SLS Operations</span><em>10/01/2026</em><i></i></div>
+                <div class="ml"><b>Electrostim</b><span>Electrostim</span><em>10/01/2026</em><i></i></div>
+                <div class="ml"><b>CPAP-SLS Ops</b><span>SLS Operations</span><em>09/28/2026</em><i></i></div>
+                <div class="ml"><b>_PTO_Sick_OOO-SLS ...</b><span>SLS Operations</span><em>09/23/2026</em><i></i></div></div></div>
+              <div class="w"><h4>Billable Amount <span>⧉</span></h4><div class="wb"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><span>daily ⌄</span><span>Test Account ⌄</span></div><div id="chAmt"></div></div></div>
+              <div class="w"><h4>Billable Hours <span>⧉</span></h4><div class="wb"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><span>daily ⌄</span><span>Test Account ⌄</span></div><div id="chBill"></div></div></div>
+              <div class="w"><h4>Labor Hours <span>⧉</span></h4><div class="wb"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><span>daily ⌄</span><span>Test Account ⌄</span></div><div id="chLab"></div></div></div>
+              <div class="w"><h4>Recent Time Entries <span>⧉</span></h4><div class="wb"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span>last day ⌄</span><span>Test Account ⌄</span></div><div id="recent"></div></div></div>
+            </div>
+            <div class="grid6">
+              <div class="w sm"><h4>My Favorite Reports</h4><div class="ph"><div><i></i>Add your favorite reports to streamline your process.</div></div></div>
+              <div class="w sm"><h4>Today's Schedule</h4><div class="ph"><div><i></i>This user does not have any calendar events to show.</div></div></div>
+              <div class="w sm"><h4>Effective Billing Rate</h4><div class="ph"><div style="font-size:16px;color:#333">N/A</div></div></div>
+              <div class="w sm"><h4>Billable Utilization</h4><div class="ph"><div>Sep &nbsp;▬▬▬▬▬▬ 100%</div></div></div>
+              <div class="w sm"><h4>Client Unpaid</h4><div class="wb"><b style="font-size:11px">Total Unpaid</b><div style="font-size:13px;font-weight:700">$155,791.83</div></div></div>
+              <div class="w sm"><h4>Recent Documents</h4><div class="ph"><div><i style="background:#3b9bd9"></i>This data is unavailable right now.</div></div></div>
+            </div>
+          </div>
+          <div class="modal" id="modal">
+            <div class="mbox">
+              <div class="mh"><span>New Time Entry</span><span class="tm"><i>▶</i> 00:00:00 ↺</span></div>
+              <div class="mtag" id="mtag"></div>
+              <div class="mf">
+                <div>
+                  <div class="r"><label>For User:</label><select id="fUser" disabled><option>Account, Test</option></select></div>
+                  <div class="r"><label>Client:</label><div class="rw"><select id="fClient"></select><b>+</b></div></div>
+                  <div class="r"><label>Matter:</label><div class="rw"><select id="fMatter"></select><b>+</b></div></div>
+                  <div class="r"><label>Activity:</label><div class="rw"><select id="fActivity"></select><span>▤</span></div></div>
+                </div>
+                <div>
+                  <div class="r"><label>Entry Type:</label><select disabled><option>Hourly Work</option></select></div>
+                  <div class="r"><label>Overtime:</label><input type="checkbox" disabled></div>
+                  <div class="r"><label>Billable:</label><input type="checkbox" checked disabled></div>
+                  <div class="r"><label>Exclude From Invoice:</label><input type="checkbox" disabled></div>
+                  <div class="r"><label>Date Created:</label><span>10/27/2026</span></div>
+                </div>
+              </div>
+              <div class="desc"><div class="r" style="grid-template-columns:120px 1fr;align-items:start"><label>Private Description:</label><div><textarea id="fDesc" aria-label="Private description" readonly></textarea><div class="cc" id="cc">Character Count: 0</div></div></div>
+                <div class="shw" style="margin-left:126px"><input type="checkbox" checked disabled> Show private description on the invoice?</div></div>
+              <div class="mf">
+                <div>
+                  <div class="r"><label>Date of Work:</label><input type="text" value="10/27/2026" readonly class="ro" style="width:90px"></div>
+                  <div class="r"><label>Start Time:</label><input type="text" class="tm" id="fStart" style="width:130px" autocomplete="off" aria-label="Start time"></div>
+                  <div class="r"><label>End Time:</label><div class="rw"><input type="text" class="tm" id="fEnd" style="width:130px;flex:none" autocomplete="off" aria-label="End time"><span class="gt">Get Time</span></div></div>
+                </div>
+                <div>
+                  <div class="r"><label>Labor Time (hrs): ⓘ</label><div class="lab"><input type="text" id="fLabor" readonly><span class="bdg" id="bdg"></span></div></div>
+                  <div class="r"><label>Rate $:</label><div class="rw"><input type="text" class="ro" value="0.00" readonly style="width:120px"><small>▢ Override</small></div></div>
+                  <div class="r"><label>Travel Time (hrs): ⓘ</label><input type="text" readonly style="width:120px"></div>
+                  <div class="r"><label>Billable (hrs): ⓘ</label><div class="rw"><input type="text" class="ro" id="fBill" readonly style="width:120px"><small>▢ Override</small></div></div>
+                </div>
+              </div>
+              <div class="mfoot"><button class="mb" id="bClose" type="button">Save &amp; Close</button><button class="mb" id="bNew" type="button">Save &amp; New</button><button class="mb" id="bDup" type="button">Save &amp; Duplicate</button><button class="mb gray" id="bCancel" type="button">Cancel</button></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TIME & EXPENSES LIST -->
+        <div class="sc" id="sc-list">
+          <div class="apph"><span class="mm">MORGAN &amp; MORGAN</span><div class="usr"><span>Test Account ▾</span><span>⊕ ✔ ? ◷</span><span class="srch">Search</span></div></div>
+          <div class="appnav"><span>DASHBOARD</span><span>CLIENTS</span><span>MATTERS</span><span class="on">TIME &amp; EXPENSES</span><span>TASKS</span><span>DOCUMENT STORAGE</span><span>CALENDAR</span><span>INVOICING</span><span>STATEMENTS</span><span>REPORTS</span><span>ACCOUNTING</span></div>
+          <div class="pg">
+            <div class="prow"><h2>Time &amp; Expenses</h2></div>
+            <div class="tcard">
+              <div class="th">BILL4TIME — TIME &amp; EXPENSES</div>
+              <div class="tabs"><span class="tab">All Week <span class="n">7</span></span><span class="tab">Sun (10/25) <span class="n">0</span></span><span class="tab">Mon (10/26) <span class="n">2</span></span><span class="tab on">Tue (10/27) <span class="n">5</span></span><span class="tab">Wed (10/28) <span class="n">0</span></span><span class="tab">Thu (10/29) <span class="n">0</span></span><span class="tab">Fri (10/30) <span class="n">0</span></span><span class="tab">Sat (10/31) <span class="n">0</span></span></div>
+              <table class="t" id="tList"><thead><tr><th class="l">Date</th><th class="l">Client</th><th class="l">Matter</th><th class="l">Private Description</th><th>Cost</th><th>Labor (hrs)</th><th>Billable (hrs)</th><th>Total (hrs)</th></tr></thead><tbody id="listBody"></tbody></table>
+              <div class="callout" id="c1"><b>Look at the Day Total — 6.50 hrs.</b> This is what Bill4Time recorded for today. It only captures time you actively billed to a client matter. Lunch, short admin tasks, and rounding are not included here.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- UKG -->
+        <div class="sc" id="sc-ukg">
+          <div class="ukg">
+            <div class="usb"><div class="av"><i>TA</i> Test Account</div><div>Favorites</div><div>＋ Add favorites</div><div style="margin-top:10px;color:#777">Myself</div><div>▤ Time ⌃</div><div style="padding-left:14px">Time overview</div><div style="padding-left:14px">Schedule</div><div class="on" style="margin-left:6px">Timecard</div><div>Pay</div><div>My profile</div><div>Communications</div><div>Benefits</div><div>Company</div></div>
+            <div class="umain">
+              <div class="uh"><span class="mm2">MORGAN &amp; MORGAN</span><b style="font-weight:500">Timecard</b><span class="tf">Timeframe &nbsp;<b>▦ Current Pay Period ▾</b></span></div>
+              <table class="ut" id="tUkg"><thead><tr><th style="width:80px">Date</th><th>Schedule</th><th>Absence</th><th>In</th><th>Out</th><th>Pay code</th><th>Amount</th><th>Shift</th><th>Daily</th><th>Period</th></tr></thead><tbody id="ukgBody"></tbody></table>
+              <div class="callout u" id="c2"><b>Find today's row (Tue 10/27) and look at the Daily column — 8:00 hrs.</b> This is how long you were clocked in today. UKG records your full shift from clock-in to clock-out. This is the number to compare against your Bill4Time total.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GAP -->
+        <div class="sc plain" id="sc-gap">
+          <div class="cmp"><div class="cmp-h">⊘ How the numbers compare — Tue 10/27</div>
+            <div class="cmp-b">
+              <div><div class="big">6.50</div><small>BILL4TIME</small><span class="s">Billable hours logged</span></div>
+              <div><div class="big">8:00</div><small>UKG</small><span class="s">Hours clocked in</span></div>
+              <div><div id="gForm"><div class="gi"><input id="gapIn" placeholder="? hrs" readonly aria-label="Gap in hours" autocomplete="off"><button id="gapBtn" type="button">Check</button></div><div style="font-size:11px;color:#6b7280;margin-top:6px">Gap = UKG − Bill4Time<br>(8:00 = 8.00 hrs)</div></div>
+                <div id="gRes" style="display:none"><div class="big" style="color:#7a808c">1.5 hr</div><small>GAP</small><span class="s">Lunch + short admin tasks</span><span class="badge">✓ Acceptable — within range</span></div></div>
+              <div class="why dim" id="why"><b>Why is there a gap?</b>Bill4Time only captures <i>billable</i> work. Your UKG total includes everything — lunch, brief admin tasks, and billing increment rounding. A gap of 1–2 hours is completely normal and expected.</div>
+            </div></div>
+          <div class="warn" id="warn"><span>⚠</span><div><b>Large gaps between Bill4Time and UKG require review.</b> If your billable hours are significantly lower than your UKG clock hours and lunch/admin don't account for the difference, check for missing entries, open timers, or unlogged tasks before the end of the day.</div></div>
+        </div>
+
+        <!-- QUIZ -->
+        <div class="sc plain" id="sc-quiz">
+          <div class="kc"><div class="kc-h">✎ Check yourself — is this gap normal, or does it need review?</div><div id="qs"></div></div>
+        </div>
+
+        <div class="toast" id="toast" role="status"></div>
+        <div class="end" id="end">
+          <div class="bg">✓</div><h2>Activity complete</h2>
+          <div>You signed in, entered your time correctly under the 3-hour rule, and checked it against UKG.</div>
+          <div class="recap"><div><span><b>Entry 1</b> 9:00am – 12:00pm</span><b>3.00 hrs ✓</b></div><div><span><b>Entry 2</b> 12:00pm – 1:30pm</span><b>1.50 hrs ✓</b></div><div><span>Bill4Time vs UKG</span><b>6.50 vs 8:00 → 1.5 hr gap ✓</b></div><div><span>Hints used</span><b id="hintCount">0</b></div><div><span>Incorrect attempts</span><b id="missCount">0</b></div></div>
+          <div class="acts"><button class="p" id="again" type="button">Retake the knowledge check</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+/* ---------- data ---------- */
+const MODEL="Reviewed and revised court submission documents, corrected deficiencies, and corresponded with client to gather required information for Matter SLS-2026-0441 (Patel, Rajesh).";
+const CLIENTS=[['patel','Patel, Rajesh'],['hern','Hernandez, Maria'],['thom','Thompson, James'],['sls','SLS Operations']];
+const MATTERS={patel:[['0441','SLS-2026-0441 — Court Submission'],['0398','SLS-2026-0398 — Medical Records']],hern:[['0215','SLS-2026-0215 — Client Intake']],thom:[['0102','SLS-2026-0102 — Correspondence']],sls:[['electro','Electrostim SLS Ops'],['baby','Baby Formula-SLS Ops'],['cpap','CPAP-SLS Ops'],['pto','_PTO_Sick_OOO-SLS']]};
+const ACTS=[['misc','SLS_Paralegal_013_Misc. Prep/Draft/Review'],['comm','SLS_Paralegal_001_Client Communication'],['rec','SLS_Paralegal_008_Medical Records'],['pto','_PTO_Sick_OOO-SLS']];
+const START0=590, S9=540, NOON=720, END1=810;
+const UKG=[
+ ['Sun 10/25','','','','','','','','','','blank'],
+ ['Mon 10/26','9:00 AM - 5:00 PM','','9:00 AM','5:00 PM','','','8:00','8:00','8:00','past'],
+ ['Tue 10/27','9:00 AM - 5:00 PM','','9:00 AM','5:00 PM','','','8:00','8:00','16:00','today'],
+ ['Wed 10/28','9:00 AM - 5:00 PM','','9:00 AM','5:00 PM','','','8:00','8:00','24:00','fut'],
+ ['Thu 10/29','','','8:00 AM','','Paid Time Off','8:00','','8:00','32:00','fut'],
+ ['Fri 10/30','9:00 AM - 5:00 PM','','9:00 AM','5:00 PM','','','8:00','8:00','40:00','fut'],
+ ['Sat 10/31','','','','','','','','','40:00','fut blank'],
+ ['Sun 11/01','','','','','','','','','40:00','fut blank'],
+ ['Mon 11/02','9:00 AM - 5:00 PM','','9:00 AM','5:00 PM','','','8:00','8:00','48:00','fut'],
+ ['Tue 11/03','9:00 AM - 5:00 PM','','9:00 AM','5:00 PM','','','8:00','8:00','56:00','fut'],
+ ['Wed 11/04','9:00 AM - 5:00 PM','','9:00 AM','5:00 PM','','','8:00','8:00','64:00','fut'],
+ ['Thu 11/05','9:00 AM - 5:00 PM','','9:00 AM','5:00 PM','','','8:00','8:00','72:00','fut'],
+ ['Fri 11/06','9:00 AM - 5:00 PM','','9:00 AM','5:00 PM','','','8:00','8:00','80:00','fut'],
+ ['Sat 11/07','','','','','','','','','80:00','fut blank']
+];
+const QS=[
+ {b:'7.50',u:'8:00',g:'0.50',ans:'ok',why:'A 0.5-hour gap is small — just rounding and a few minutes of admin. Normal.'},
+ {b:'6.00',u:'8:00',g:'2.00',ans:'ok',why:'A 2-hour gap is at the top of the normal range — lunch plus short admin tasks can explain it. Normal.'},
+ {b:'3.75',u:'8:00',g:'4.25',ans:'rev',why:'A 4.25-hour gap is far more than lunch and admin explain. Check for missing entries, open timers, or unlogged tasks before end of day.'}
+];
+
+/* ---------- helpers ---------- */
+function parse(s){
+  s=(s||'').trim().toLowerCase(); if(!s) return {empty:true};
+  let m=s.match(/^(\d{1,2})(?::?(\d{2}))?\s*([ap])\.?(?:m\.?)?$/);
+  if(m){let h=+m[1],mi=+(m[2]||0); if(h<1||h>12||mi>59) return null; if(m[3]==='p'&&h<12)h+=12; if(m[3]==='a'&&h===12)h=0; return {min:h*60+mi};}
+  m=s.match(/^(\d{1,2}):(\d{2})$/); if(m){const h=+m[1],mi=+m[2]; if(h>=13&&h<=23&&mi<60) return {min:h*60+mi};}
+  return null;
+}
+const fmt=m=>{if(m==null)return'';const h=Math.floor(m/60),mi=m%60;return((h%12)||12)+':'+String(mi).padStart(2,'0')+(h>=12?'pm':'am');};
+const labor=s=>(s.end==null||s.start==null)?null:(s.end<=s.start?0:(s.end-s.start)/60);
+const plain=h=>h.replace(/<[^>]+>/g,'');
+function baseState(){return {scene:'login',modal:false,pw:'',client:'',matter:'',activity:'',desc:'',start:START0,end:null,entry:1,split:false,saved:false,foundDay:false,foundDaily:false,gap:false,q:[false,false,false]};}
+
+/* ---------- steps ---------- */
+const STEPS=[
+ {part:0,color:'blue',title:'Sign In to Bill4Time',
+  body:`<p>Start your day in <b class="k">Bill4Time</b>. Your <b>Company ID</b> (Morgan) and <b>User Name</b> are already filled in.</p>`,
+  walk:'A practice password is typed, then Log In is clicked.',tryT:'Type a practice password, then click <b>Log In</b>.',
+  checks:['Type a practice password','Click Log In'],
+  tip:'🔒 This is a practice screen. Type any text — never enter your real password here.',
+  hint:'Click the empty Password box, type anything (for example “practice”), then click the blue Log In button.',
+  targets:['pw'],pulse:'#pw,#btnLogin',expect:'login',
+  apply:s=>{s.pw='practice';s.scene='dash';},test:s=>s.scene==='dash',okMsg:'You’re in! This is your Dashboard.',
+  async play(){await typeInto('pw','practice',90,v=>{S.pw=v;});await sleep(500);press('btnLogin');act('login');}},
+ {part:1,color:'blue',title:'Open a New Time Entry',
+  body:`<p>You land on your <b class="k">Dashboard</b> — your home base for recent matters, hours charts and quick links.</p>`,
+  walk:'Add Time is clicked and the New Time Entry form opens.',tryT:'Click the blue <b>Add Time</b> button.',
+  tip:'💡 Add Time opens the full New Time Entry form. The small “Time Entry” box on the dashboard is only for very quick entries.',
+  hint:'It’s the first blue button in the top-right, above the dashboard boxes.',
+  pulse:'#btnAddTime',expect:'addTime',
+  apply:s=>{s.modal=true;},test:s=>s.modal,okMsg:'The New Time Entry form is open.',
+  async play(){await sleep(400);press('btnAddTime');act('addTime');}},
+ {part:2,color:'blue',title:'Choose the Client',
+  body:`<p>In Bill4Time, all of your time is entered under the client <b class="k">SLS Operations</b>. The specific person or case you worked on goes in the <b>Private Description</b>, not the Client field.</p>`,
+  walk:'SLS Operations is selected in the Client list.',tryT:'Choose <b>SLS Operations</b> in the <b>Client</b> list.',
+  tip:'💡 Always choose SLS Operations as the Client — even when the work is for a specific person like Rajesh Patel. Their name belongs in the description.',
+  hint:'Open the Client dropdown and pick SLS Operations (not the person’s name).',
+  targets:['fClient'],pulse:'#fClient',
+  apply:s=>{s.client='sls';},test:s=>s.client==='sls',
+  wrong:s=>s.client?'Time is always entered under the client <b>SLS Operations</b>. The person’s name (Patel) goes in the description, not the Client field.':'',okMsg:'Client set to SLS Operations.',
+  async play(){await sleep(500);choose('fClient','sls',setClient);}},
+ {part:2,color:'blue',title:'Choose the Matter',
+  body:`<p>Next, choose the <b class="k">matter</b> this work belongs to. Court submission work for this group is tracked under <b class="k">Electrostim SLS Ops</b>.</p>`,
+  walk:'Electrostim SLS Ops is selected in the Matter list.',tryT:'Choose <b>Electrostim SLS Ops</b> in <b>Matter</b>.',
+  tip:'💡 Always check the matter before saving. Time on the wrong matter gets billed to the wrong place.',
+  hint:'The Matter list shows the matters under SLS Operations. Pick Electrostim SLS Ops.',
+  targets:['fMatter'],pulse:'#fMatter',
+  apply:s=>{s.matter='electro';},test:s=>s.matter==='electro',
+  wrong:s=>s.matter?'That matter is for a different project. This work belongs under <b>Electrostim SLS Ops</b>.':'',okMsg:'Matter set to Electrostim SLS Ops.',
+  async play(){await sleep(500);choose('fMatter','electro',setMatter);}},
+ {part:2,color:'blue',title:'Choose the Activity',
+  body:`<p>The activity describes the <i>type</i> of work. Drafting and reviewing court documents is <b class="k">Misc. Prep/Draft/Review</b>.</p>`,
+  walk:'The Misc. Prep/Draft/Review activity is selected.',tryT:'Choose <b>SLS_Paralegal_013_Misc. Prep/Draft/Review</b>.',
+  tip:'💡 Pick the activity that matches the work you did, not just the first one in the list.',
+  hint:'Look for “013_Misc. Prep/Draft/Review” in the Activity list.',
+  targets:['fActivity'],pulse:'#fActivity',
+  apply:s=>{s.activity='misc';},test:s=>s.activity==='misc',
+  wrong:s=>s.activity?'That activity doesn’t match drafting and reviewing court documents. Choose <b>013_Misc. Prep/Draft/Review</b>.':'',okMsg:'Activity set.',
+  async play(){await sleep(500);choose('fActivity','misc',setActivity);}},
+ {part:2,color:'blue',title:'Write the Private Description',
+  body:`<p>A good description says <b class="k">what you did</b>, on <b class="k">what</b>, and <b class="k">for whom</b>.</p><p style="font-size:11.5px;color:#475569"><i>Example:</i> “${MODEL.slice(0,90)}…”</p>`,
+  walk:'A clear description is typed into the Private Description box.',tryT:'Type a description of <b>at least 40 characters</b>.',
+  tip:'💡 Vague notes like “worked on case” can’t be billed or defended. Be specific.',
+  hint:'Describe the work in a full sentence: what you did, on which document, and for whom.',
+  targets:['fDesc'],pulse:'#fDesc',
+  apply:s=>{s.desc=MODEL;},test:s=>s.desc.trim().length>=40,
+  wrong:s=>s.desc.length?`${s.desc.trim().length}/40 characters — add more detail: what you did, on what, and for whom.`:'',okMsg:'Good, specific description.',
+  async play(){await sleep(400);await typeInto('fDesc',MODEL,16,setDesc);}},
+ {part:2,color:'blue',title:'Set the Start Time',
+  body:`<p><b class="k">Start Time</b> defaults to the <i>current</i> time (9:50am). It must show when you actually began working.</p><p>You started this court submission at <b class="k">9:00am</b>.</p>`,
+  walk:'Start Time changes from 9:50am to 9:00am.',tryT:'Change <b>Start Time</b> to <b>9:00am</b>.',
+  tip:'💡 Never leave the default start time if it isn’t accurate.',
+  hint:'Click Start Time, replace 9:50am with 9:00am.',
+  targets:['fStart'],pulse:'#fStart',
+  apply:s=>{s.start=S9;s.split=true;},test:s=>s.start===S9,
+  wrong:s=>s.start!=null&&s.start!==START0?'Start Time must show when you actually began: <b>9:00am</b>.':'',okMsg:'Start Time is 9:00am.',
+  async play(){await sleep(400);await typeInto('fStart','9:00am',100,v=>setTime('start',v));}},
+ {part:2,color:'red',title:'The 3-Hour Rule — End Time',
+  enter:s=>{s.split=true;},
+  body:`<p>You worked until <b>1:30pm</b> — that’s <b>4.5 hours</b>. But <b class="k">no single entry may exceed 3 hours</b> (block billing is not permitted).</p><p>Stop this entry at the <b class="k">3-hour mark</b>.</p>`,
+  walk:'1:30pm is tried first and flagged red. Then End Time is changed to 12:00pm.',tryT:'Enter <b>12:00pm</b> as the <b>End Time</b>.',
+  tip:'⚠ 9:00am + 3 hours = 12:00pm. You’ll log the rest in a second entry.',
+  hint:'Start 9:00am + 3 hours = 12:00pm. Type 12:00pm in End Time.',
+  targets:['fEnd'],pulse:'#fEnd',warn:true,
+  apply:s=>{s.end=NOON;},test:s=>s.end===NOON,
+  wrong:s=>{if(s.end==null)return'';const l=labor(s);if(s.end<=s.start)return'End Time must be after the 9:00am start.';if(s.end>NOON)return`That’s ${l.toFixed(2)} hrs — over the 3-hour limit (block billing). End at <b>12:00pm</b>.`;return`That’s only ${l.toFixed(2)} hrs. Entry 1 should use the full 3 hours: <b>12:00pm</b>.`;},
+  okMsg:'Labor Time is 3.00 hrs — within the limit.',
+  async play(){await sleep(400);await typeInto('fEnd','1:30pm',100,v=>setTime('end',v));await sleep(1700);$('fEnd').value='';setTime('end','');await sleep(300);await typeInto('fEnd','12:00pm',100,v=>setTime('end',v));}},
+ {part:2,color:'green',title:'Save & Duplicate',
+  body:`<p>Entry 1 is complete. Now save it and start the second entry for the remaining time.</p><p><b class="k">Save &amp; Duplicate</b> saves this entry and opens Entry 2 with the client, matter, activity and description carried over.</p>`,
+  walk:'Save & Duplicate is clicked and Entry 2 opens.',tryT:'Click <b>Save &amp; Duplicate</b>.',
+  tip:'💡 Use Save & Duplicate (not Save & Close) so you don’t have to re-enter everything.',
+  hint:'It’s the third blue button at the bottom of the form.',
+  pulse:'#bDup',expect:'dup',
+  apply:s=>{s.entry=2;},test:s=>s.entry===2,okMsg:'Entry 1 saved ✓ — Entry 2 is open.',
+  async play(){await sleep(500);press('bDup');act('dup');}},
+ {part:2,color:'green',title:'Update the Start Time',
+  body:`<p>Entry 2 opens with everything carried over — including the <i>old</i> times.</p><p>First, update <b class="k">Start Time</b> to <b class="k">12:00pm</b>, the moment you resumed work.</p>`,
+  walk:'Start Time changes from 9:00am to 12:00pm.',tryT:'Change <b>Start Time</b> to <b>12:00pm</b>.',
+  tip:'💡 Entry 2 must start when Entry 1 ended — no overlap, no gap.',
+  hint:'Click Start Time and type 12:00pm.',
+  targets:['fStart'],pulse:'#fStart',
+  apply:s=>{s.start=NOON;},test:s=>s.start===NOON,
+  wrong:s=>s.start!=null?'Entry 2 starts where Entry 1 ended: <b>12:00pm</b>.':'',okMsg:'Start Time is 12:00pm.',
+  async play(){await sleep(400);await typeInto('fStart','12:00pm',100,v=>setTime('start',v));}},
+ {part:2,color:'green',title:'Clear & Re-Enter End Time',
+  body:`<p>The End Time from Entry 1 carried over. <b class="k">Clear it</b>, then enter the real end time: <b class="k">1:30pm</b>.</p><p>Bill4Time will calculate <b class="k">1.50 hrs</b> — within the limit.</p>`,
+  walk:'End Time is cleared, then 1:30pm is entered.',tryT:'<b>Clear</b> End Time, then type <b>1:30pm</b>.',
+  checks:['Clear the End Time','Enter 1:30pm'],
+  tip:'💡 Always clear a duplicated End Time before entering the new one.',
+  hint:'Select the End Time text, delete it, then type 1:30pm.',
+  targets:['fEnd'],pulse:'#fEnd',
+  apply:s=>{s.end=END1;},test:s=>s.end===END1,
+  wrong:s=>s.end==null?'Cleared. Now type the actual end time: <b>1:30pm</b>.':'Use the actual end time: <b>1:30pm</b>.',okMsg:'Labor Time is 1.50 hrs — within the limit.',
+  async play(){await sleep(500);$('fEnd').value='';setTime('end','');subs.cleared=true;syncChecks();await sleep(700);await typeInto('fEnd','1:30pm',100,v=>setTime('end',v));}},
+ {part:2,color:'green',title:'Save & Close',
+  body:`<p>Entry 2 is ready. Click <b class="k">Save &amp; Close</b> to finish.</p><p>You now have two entries covering the full 4.5 hours — each within the 3-hour limit:</p><p>• <b class="k">Entry 1:</b> 9:00am – 12:00pm = 3.00 hrs ✓<br>• <b class="k">Entry 2:</b> 12:00pm – 1:30pm = 1.50 hrs ✓</p>`,
+  walk:'Save & Close finishes Entry 2 and returns to the dashboard.',tryT:'Click <b>Save &amp; Close</b>.',
+  tip:'💡 This is the correct way to handle any task longer than 3 hours.',
+  hint:'It’s the first blue button at the bottom-left of the button row.',
+  pulse:'#bClose',expect:'close',
+  apply:s=>{s.modal=false;s.saved=true;s.scene='dash';},test:s=>s.saved,okMsg:'Both entries saved ✓ — see Recent Time Entries.',
+  async play(){await sleep(500);press('bClose');act('close');}},
+ {part:3,color:'blue',title:'Review Your Day',
+  body:`<p>Earlier today you also logged <b class="k">three smaller entries</b>. To see everything for the day, open <b class="k">Time &amp; Expenses</b>.</p>`,
+  walk:'The Time & Expenses tab is clicked.',tryT:'Click <b>TIME &amp; EXPENSES</b> in the top menu.',
+  tip:'💡 The Dashboard is a summary. Time & Expenses is where you check the real entries.',
+  hint:'It’s the fourth item in the menu bar under the blue header.',
+  pulse:'#navTime',expect:'nav:time',
+  apply:s=>{s.scene='list';},test:s=>s.scene==='list',okMsg:'Here are all of today’s entries.',
+  async play(){await sleep(500);press('navTime');act('nav:time');}},
+ {part:3,color:'blue',title:'Find Your Bill4Time Total',
+  body:`<p>Your five entries are listed for <b class="k">Tue (10/27)</b>. You need the <b class="k">total for the day</b> to compare with UKG.</p>`,
+  walk:'The Day Total row (6.50 hrs) is highlighted.',tryT:'Click the <b>Day Total</b> row.',
+  tip:'💡 Day Total = every billable entry for that day added together.',
+  hint:'Look at the bottom of the table for the row labelled “Day Total”.',
+  pulse:'#dayRow',expect:'day',
+  apply:s=>{s.foundDay=true;},test:s=>s.foundDay,okMsg:'Day Total = 6.50 hrs billed.',
+  async play(){await sleep(600);act('day');}},
+ {part:4,color:'blue',title:'Switch to UKG',
+  body:`<p>Now check what <b class="k">UKG</b> recorded for the same day — your clock-in and clock-out time.</p>`,
+  walk:'The UKG tab is clicked and your Timecard opens.',tryT:'Click the <b>UKG</b> tab at the top.',
+  tip:'💡 Bill4Time = time you billed. UKG = time you were clocked in.',
+  hint:'The tabs are at the very top of the screen: Bill4Time and UKG.',
+  pulse:'#tabUKG',expect:'tab:ukg',
+  apply:s=>{s.scene='ukg';},test:s=>s.scene==='ukg',okMsg:'This is your UKG Timecard.',
+  async play(){await sleep(500);press('tabUKG');act('tab:ukg');}},
+ {part:4,color:'blue',title:'Find Your Clocked-In Hours',
+  body:`<p>Find <b class="k">today’s row</b> (Tue 10/27, tagged TODAY) and look at the <b class="k">Daily</b> column.</p>`,
+  walk:'Tue 10/27 → Daily = 8:00 is highlighted.',tryT:'Click the <b>Daily</b> hours on the <b>Tue 10/27</b> row.',
+  tip:'💡 “Period” is a running total for the whole pay period — not today.',
+  hint:'Find the row marked TODAY, then go across to the Daily column.',
+  pulse:'#ukgTodayDaily',expect:'daily',
+  apply:s=>{s.foundDaily=true;},test:s=>s.foundDaily,okMsg:'Daily = 8:00 hrs clocked in.',
+  async play(){await sleep(600);act('daily');}},
+ {part:5,color:'blue',title:'Work Out the Gap',
+  enter:s=>{s.scene='gap';},
+  body:`<p>You have both numbers: <b class="k">6.50</b> billed in Bill4Time and <b class="k">8:00</b> clocked in UKG.</p>`,
+  walk:'1.5 is entered: 8.00 − 6.50 = 1.5 hrs.',tryT:'Type the gap in hours: <b>UKG − Bill4Time</b>.',
+  tip:'💡 8:00 means 8.00 hours.',
+  hint:'8.00 − 6.50 = ? Type just the number.',
+  targets:['gapIn'],pulse:'#gapIn,#gapBtn',expect:'gap',
+  apply:s=>{s.gap=true;},test:s=>s.gap,okMsg:'Gap = 1.5 hrs — lunch plus short admin tasks. Normal.',
+  async play(){await sleep(500);await typeInto('gapIn','1.5',150,()=>{});press('gapBtn');act('gap');}},
+ {part:5,color:'green',title:'Check Yourself',
+  enter:s=>{s.scene='quiz';},
+  body:`<p>Is each gap <b class="k">normal</b>, or does it <b class="k">need review</b>?</p>`,
+  walk:'Each scenario is answered for you.',tryT:'Choose <b>Normal</b> or <b>Needs review</b> for all three scenarios.',
+  tip:'💡 Up to about 2 hours is normal (lunch, short admin, rounding). Larger gaps need a review before end of day.',
+  hint:'Ask: could lunch and short admin tasks explain a gap this size?',
+  apply:s=>{s.q=[true,true,true];},test:s=>s.q.every(Boolean),okMsg:'All three correct!',
+  async play(){for(let i=0;i<3;i++){await sleep(900);answer(i,QS[i].ans);}}}
+];
+const PARTS=['Sign in','Dashboard','Enter time','Review','UKG','Compare'];
+
+/* ---------- state ---------- */
+let misses=0,mode='try',step=0,S=baseState(),done=false,token=0,hints=0,subs={},auto=false,scale=1;
+function stateAt(n){const s=baseState();for(let i=0;i<n;i++){STEPS[i].enter&&STEPS[i].enter(s);STEPS[i].apply(s);}STEPS[n].enter&&STEPS[n].enter(s);return s;}
+const gate=()=>mode==='try'||auto;
+
+/* ---------- build selects ---------- */
+function opts(el,list,ph){el.innerHTML=`<option value="">${ph}</option>`+list.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('');}
+opts($('fClient'),CLIENTS,'Search');opts($('fMatter'),[],'Search');opts($('fActivity'),ACTS,'Select Activity');
+$('qs').innerHTML=QS.map((q,i)=>`<div class="q" id="q${i}"><p><b>Scenario ${String.fromCharCode(65+i)}</b></p><div class="mini"><div><b>${q.b}</b><small>BILL4TIME</small></div><div><b>${q.u}</b><small>UKG</small></div><div><b>${q.g} hr</b><small>GAP</small></div></div><div class="ans"><button type="button" data-i="${i}" data-a="ok">✓ Normal — no action</button><button type="button" data-i="${i}" data-a="rev">⚠ Needs review</button></div><div class="qf" id="qf${i}"></div></div>`).join('');
+$('qs').querySelectorAll('button').forEach(b=>b.onclick=()=>{if(mode==='try')answer(+b.dataset.i,b.dataset.a);});
+$('listBody').innerHTML='';
+$('ukgBody').innerHTML=UKG.map((r,i)=>{const c=r[10];const td=(v,x='')=>`<td class="${x}">${v}</td>`;
+ return `<tr class="${c}" data-i="${i}">${td(r[0]+(c==='today'?'<span class="tdp">TODAY</span>':''),'l')}${td(r[1])}${td(r[2])}${td(r[3],r[3]?'pu':'')}${td(r[4],r[4]?'pu':'')}${td(r[5],'pu')}${td(r[6],'pu')}${td(r[7])}<td class="dly"${c==='today'?' id="ukgTodayDaily"':''}>${r[8]}</td>${td(r[9])}</tr>`;}).join('');
+
+/* ---------- actions ---------- */
+function setClient(v){if(!gate())return;S.client=v;S.matter='';render();after('client');}
+function setMatter(v){if(!gate())return;S.matter=v;render();after('matter');}
+function setActivity(v){if(!gate())return;S.activity=v;render();after('activity');}
+function setDesc(v){if(!gate())return;S.desc=v;render();after('desc');}
+function setTime(w,v){if(!gate())return;const p=parse(v);if(p&&p.empty){S[w]=null;if(w==='end'&&step===10){subs.cleared=true;}}else if(p)S[w]=p.min;else return;render();after(w);}
+function act(name,val){
+  if(!gate())return;
+  const st=STEPS[step];
+  if(mode==='walk'||auto){ // programmatic or walk
+    if(name==='login'){S.scene='dash';}
+    else if(name==='addTime'){S.modal=true;}
+    else if(name==='dup'){S.entry=2;S.carried=true;}
+    else if(name==='close'){S.modal=false;S.saved=true;S.scene='dash';}
+    else if(name==='nav:time'){S.scene='list';}
+    else if(name==='day'){S.foundDay=true;}
+    else if(name==='tab:ukg'){S.scene='ukg';}
+    else if(name==='daily'){S.foundDaily=true;}
+    else if(name==='gap'){S.gap=true;}
+    render();after(name);return;
+  }
+  // try mode
+  if(name==='login'&&step===0){ if(!S.pw){fb('no','Type a practice password first (any text — never your real one), then click Log In.');return;} S.scene='dash'; render();after(name);return;}
+  if(st.expect&&name===st.expect){
+    if(name==='addTime')S.modal=true; if(name==='dup'){S.entry=2;S.carried=true;} if(name==='close'){S.modal=false;S.saved=true;S.scene='dash';}
+    if(name==='nav:time')S.scene='list'; if(name==='day')S.foundDay=true; if(name==='tab:ukg')S.scene='ukg'; if(name==='daily')S.foundDaily=true;
+    if(name==='gap'){return checkGap();}
+    render();after(name);return;
+  }
+  if(done){fb('info','This step is already done — click <b>Next</b>.');return;}
+  wrongAct(name,val);
+}
+function wrongAct(name,val){
+  const st=STEPS[step],t=plain(st.tryT);
+  const M={
+    bCloseEarly:'Save &amp; Close would end the entry — you still have time left to log. Use <b>Save &amp; Duplicate</b>.',
+    bNew:'Save &amp; New starts a <i>blank</i> entry — you’d have to retype everything. Use <b>Save &amp; Duplicate</b>.',
+    cancel:'Cancel would throw your entry away. '+t,
+  };
+  let m='Not this one — '+t;
+  if(name==='close'&&step===8)m=M.bCloseEarly;
+  else if(name==='new')m=M.bNew; else if(name==='cancel')m=M.cancel;
+  else if(name==='quick')m='That’s the small quick-entry box. Use the <b>Add Time</b> button for the full form.';
+  else if(name==='tab:ukg')m='Not yet — '+t;
+  else if(name==='entryRow')m='That’s a single entry. You need the <b>total for the whole day</b> — look at the bottom of the table.';
+  else if(name==='weekRow')m='That’s the <b>Week Total</b>. It matches only because nothing else is logged. Use the <b>Day Total</b> just above it.';
+  else if(name==='ukg:per')m='<b>Period</b> is a running total for the pay period. You want <b>Daily</b> for today.';
+  else if(name==='ukg:other')m='That’s a different day (or a blank one). Find the row tagged <b>TODAY</b>.';
+  else if(name==='ukg:todayOther')m='Close — that’s today’s row, but you need the <b>Daily</b> column.';
+  else if(name==='login')m='Not yet.';
+  fb('no',m);toast('Not quite — try again.');
+}
+function pressedBtn(name){ if(mode==='try') act(name); }
+
+function checkGap(){
+  const raw=$('gapIn').value.trim().toLowerCase().replace(/hrs?|hours?/g,'').trim();
+  let v=null,m=raw.match(/^-?\d+(\.\d+)?$/);if(m)v=+raw;else{m=raw.match(/^(\d+):(\d{2})$/);if(m)v=+m[1]+ +m[2]/60;}
+  if(v==null){fb('no','Type the gap as a number of hours, for example <b>1.5</b>.');return;}
+  if(Math.abs(v-1.5)<.01){S.gap=true;render();after('gap');}
+  else if(v<0)fb('no','Subtract the smaller from the larger: <b>UKG − Bill4Time</b>.');
+  else if(v>10)fb('no','Don’t add them — you want the <b>difference</b>: 8.00 − 6.50.');
+  else fb('no','Not quite. Convert 8:00 to <b>8.00</b> hours, then subtract <b>6.50</b>.');
+}
+function answer(i,a){
+  if(S.q[i])return;const q=QS[i],box=$('q'+i),f=$('qf'+i),right=a===q.ans;
+  box.querySelectorAll('button').forEach(b=>{b.classList.remove('wrong','right');if(b.dataset.a===a)b.classList.add(right?'right':'wrong');});
+  f.className='qf show '+(right?'ok':'no');f.innerHTML=right?('✓ '+q.why):'Not quite — think about whether lunch and short admin tasks could explain a gap this size. Try the other answer.';
+  if(right){S.q[i]=true;box.querySelectorAll('button').forEach(b=>b.disabled=true);if(mode==='try'&&S.q.every(Boolean))after('quiz');}
+}
+
+/* ---------- try-mode evaluation ---------- */
+function after(name){
+  if(mode!=='try')return;
+  const st=STEPS[step];
+  if(st.test(S)){ if(!done)complete(st.okMsg); }
+  else { if(done)undo(); const m=st.wrong&&st.wrong(S);if(m&&(name!=='login'))fb(m.startsWith('Cleared')?'info':'no',m); }
+  syncChecks();
+}
+function complete(msg){done=true;if($('tip'))$('tip').style.display='block';render();syncChecks();renderNav();fb('ok','✓ '+msg);if(step===17)finish();}
+function undo(){done=false;render();renderNav();}
+function finish(){ $('hintCount').textContent=hints;$('missCount').textContent=misses;$('end').classList.add('show');try{window.parent.postMessage({type:'day-in-b4t-ukg-complete',hintsUsed:hints,incorrect:misses},'*');}catch(e){} }
+
+/* ---------- controls wiring ---------- */
+$('pw').addEventListener('input',e=>{if(mode==='try'){S.pw=e.target.value;}});
+$('pw').addEventListener('input',()=>{if(mode==='try'){syncChecks();}});
+$('eye').onclick=()=>{const p=$('pw');p.type=p.type==='password'?'text':'password';};
+$('btnLogin').onclick=()=>act('login');
+$('btnAddTime').onclick=()=>act('addTime');
+$('quick').onclick=()=>{if(mode==='try'&&!STEPS[step].test(S))act('quick');};
+document.querySelectorAll('.pbtn button[data-w]').forEach(b=>b.onclick=()=>{if(mode==='try')wrongAct('x');});
+$('appnav').addEventListener('click',e=>{const s=e.target.closest('span');if(!s||mode!=='try')return;if(s.dataset.n==='time')act('nav:time');else if(s.dataset.n!=='dash')wrongAct('x');});
+$('fClient').onchange=e=>setClient(e.target.value);$('fMatter').onchange=e=>setMatter(e.target.value);$('fActivity').onchange=e=>setActivity(e.target.value);
+$('fDesc').addEventListener('input',e=>setDesc(e.target.value));
+['start','end'].forEach(w=>{const id=w==='start'?'fStart':'fEnd',el=$(id);
+  el.addEventListener('input',()=>setTime(w,el.value));
+  el.addEventListener('focus',()=>{if(!el.readOnly)setTimeout(()=>el.select(),0);});
+  el.addEventListener('blur',()=>{if(mode==='try'&&STEPS[step].targets&&STEPS[step].targets.includes(id)&&el.value&&!parse(el.value))fb('no','I couldn’t read that time. Use a format like <b>12:00pm</b>.');});});
+$('bClose').onclick=()=>act('close');$('bDup').onclick=()=>act('dup');$('bNew').onclick=()=>act('new');$('bCancel').onclick=()=>act('cancel');
+$('tabUKG').onclick=()=>{if(mode==='try')act('tab:ukg');};
+$('tabB4').onclick=()=>{if(mode==='try'&&S.scene==='ukg'&&step>14)toast('This scenario continues in UKG.');};
+$('tList').addEventListener('click',e=>{if(mode!=='try')return;const tr=e.target.closest('tr');if(!tr)return;if(tr.id==='dayRow')act('day');else if(tr.id==='weekRow')act('weekRow');else if(tr.classList.contains('en'))act('entryRow');});
+$('tUkg').addEventListener('click',e=>{if(mode!=='try')return;const td=e.target.closest('td'),tr=e.target.closest('tr');if(!td||!tr||!tr.parentNode.matches('tbody'))return;
+  const today=tr.classList.contains('today');
+  if(today&&td.classList.contains('dly'))act('daily');else if(today&&td===tr.lastElementChild)act('ukg:per');else if(today)act('ukg:todayOther');else act('ukg:other');});
+$('gapBtn').onclick=()=>act('gap');
+$('gapIn').addEventListener('keydown',e=>{if(e.key==='Enter')act('gap');});
+
+/* ---------- walkthrough helpers ---------- */
+async function typeInto(id,text,delay,fn){const e=$(id),tok=token;e.value='';for(let i=1;i<=text.length;i++){if(tok!==token)throw 'cancel';e.value=text.slice(0,i);fn(e.value);if(id==='fDesc'||id==='fStart'||id==='fEnd')render();await sleep(delay);}}
+function choose(id,v,fn){$(id).value=v;fn(v);}
+function press(id){const b=$(id);if(!b)return;b.classList.add('pressed');setTimeout(()=>b.classList.remove('pressed'),260);}
+
+/* ---------- rendering ---------- */
+const sync=(id,v)=>{const e=$(id);if(document.activeElement!==e&&e.value!==v)e.value=v;};
+function render(){
+  const st=STEPS[step];
+  ['login','dash','list','ukg','gap','quiz'].forEach(k=>$('sc-'+k).style.display=S.scene===k?'block':'none');
+  $('modal').style.display=(S.scene==='dash'&&S.modal)?'flex':'none';
+  $('tabB4').classList.toggle('on',S.scene!=='ukg');$('tabUKG').classList.toggle('on',S.scene==='ukg');
+  // login
+  sync('pw',S.pw);
+  // form
+  if($('fMatter').dataset.c!==S.client){opts($('fMatter'),S.client?MATTERS[S.client]:[],S.client?'Search':'Search');$('fMatter').dataset.c=S.client;}
+  $('fClient').value=S.client;$('fMatter').value=S.matter;$('fActivity').value=S.activity;
+  sync('fDesc',S.desc);$('cc').textContent='Character Count: '+S.desc.length;
+  sync('fStart',fmt(S.start));sync('fEnd',fmt(S.end));
+  $('mtag').textContent=S.split?`ENTRY ${S.entry} OF 2`:'';
+  const l=labor(S),L=l==null?'':l.toFixed(2);
+  $('fLabor').value=L;$('fBill').value=l==null?'0.00':L;
+  const bd=$('bdg');bd.className='bdg'+(l>3?' bad':(l>0&&S.end!=null?' ok':''));bd.innerHTML=l>3?'✕ Exceeds<br>3-hr limit':'✓ Within<br>limit';
+  $('fLabor').className=l>3?'bad':(l>0?'good':'');$('fEnd').classList.toggle('bad',l>3);
+  // locks
+  const T=st.targets||[],on=id=>mode==='try'&&T.includes(id)&&!auto;
+  $('pw').readOnly=!on('pw');$('pw').classList.toggle('edit',on('pw'));
+  ['fClient','fActivity'].forEach(id=>{$(id).disabled=!on(id);$(id).classList.toggle('edit',on(id));});
+  $('fMatter').disabled=!(on('fMatter')&&S.client);$('fMatter').classList.toggle('edit',on('fMatter')&&!!S.client);
+  $('fDesc').readOnly=!on('fDesc');$('fDesc').classList.toggle('edit',on('fDesc'));
+  ['fStart','fEnd'].forEach(id=>{$(id).readOnly=!on(id);$(id).classList.toggle('edit',on(id));});
+  $('gapIn').readOnly=!on('gapIn');$('gapIn').classList.toggle('edit',on('gapIn'));
+  // list
+  buildList();$('dayRow').classList.toggle('found',S.foundDay);$('c1').classList.toggle('show',S.foundDay);
+  // ukg
+  const tr=document.querySelector('#tUkg tr.today');tr.classList.toggle('found',S.foundDaily);$('c2').classList.toggle('show',S.foundDaily);
+  // gap
+  $('gForm').style.display=S.gap?'none':'block';$('gRes').style.display=S.gap?'block':'none';$('why').classList.toggle('dim',!S.gap);$('warn').classList.toggle('show',S.gap);
+  // dash widgets
+  const hrs=S.saved?4.5:0;
+  const bars=(v,unit)=>['Today','Mon','Sun','Sat','Fri','Thu','Wed'].map((d,i)=>{const val=i===0?v:(i===1?0.2:0);return `<div class="hrow"><span>${d}</span><div>${val?`<i style="width:${Math.min(val/4.5,1)*80+8}%"></i>`:''}<u>${val||0}</u></div></div>`;}).join('');
+  $('chBill').innerHTML=bars(hrs);$('chLab').innerHTML=bars(hrs);$('chAmt').innerHTML=['Today','Mon','Sun','Sat','Fri','Thu','Wed'].map(d=>`<div class="hrow"><span>${d}</span><div><u>0</u></div></div>`).join('');
+  $('recent').innerHTML=(S.saved?`<div class="re"><div class="d"><span>10/27/2026</span><span>4.50 hrs</span></div><b>SLS_Paralegal_013_Misc. ...</b><div class="r2"><span>SLS Operations</span><span>3.00</span></div></div><div class="re"><b>SLS_Paralegal_013_Misc. ...</b><div class="r2"><span>SLS Operations</span><span>1.50</span></div></div>`:'')+`<div class="re"><div class="d"><span>10/26/2026</span><span>0.20 hrs</span></div><b>SLS_Paralegal_001_Clie...</b><div class="r2"><span>SLS Operations</span><span>0.10</span></div></div>`;
+  pulses();renderNav();
+}
+function buildList(){
+  const short=(S.desc||MODEL).slice(0,42)+'…';
+  const row=(c,m,d,h)=>`<tr class="en"><td class="l">⏱ 10/27/2026</td><td class="l">${c}</td><td class="l">${m}</td><td class="l">${d}</td><td>-</td><td>${h}</td><td>${h}</td><td>${h}</td></tr>`;
+  const html=row('SLS Operations','Electrostim SLS Ops',short,'3.00')+row('SLS Operations','Electrostim SLS Ops',short,'1.50')+row('SLS Operations','Electrostim SLS Ops','Client Intake Interview &amp; Notes (Hernandez, Maria)','1.00')+row('SLS Operations','Electrostim SLS Ops','Court Filing Preparation','0.50')+row('SLS Operations','Electrostim SLS Ops','Attorney Correspondence / Email Follow-Up (Thompson, James)','0.50')
+   +`<tr class="tot" id="dayRow"><td class="l" colspan="4">Day Total:</td><td>-</td><td>6.50</td><td>6.50</td><td>6.50</td></tr><tr class="tot wk" id="weekRow"><td class="l" colspan="4">Week Total:</td><td>-</td><td>6.50</td><td>6.50</td><td>6.50</td></tr>`;
+  if($('listBody').dataset.k!==short){$('listBody').innerHTML=html;$('listBody').dataset.k=short;}
+}
+function pulses(){document.querySelectorAll('.pulse').forEach(e=>e.classList.remove('pulse'));return;
+  document.querySelectorAll('.pulse').forEach(e=>e.classList.remove('pulse'));
+  const st=STEPS[step];if(done||!st.pulse||(mode==='walk'&&!auto&&false))return;
+  document.querySelectorAll(st.pulse).forEach(e=>e.classList.add('pulse'));
+}
+function toast(m,ms=2200){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),ms);}
+function fb(kind,msg){const f=$('fb');if(!f)return;if(kind==='no'&&msg)misses++;if(!msg){f.className='fb';f.textContent='';return;}f.className='fb show '+kind;f.innerHTML=(kind==='ok'?'':'')+msg;}
+function syncChecks(){
+  const c=document.querySelectorAll('#checks li');if(!c.length)return;
+  if(step===0){c[0].classList.toggle('on',(S.pw||'').length>0);c[1].classList.toggle('on',S.scene==='dash');}
+  if(step===10){c[0].classList.toggle('on',!!subs.cleared||S.end===END1);c[1].classList.toggle('on',S.end===END1);}
+}
+
+/* ---------- card ---------- */
+function renderCard(){
+  const st=STEPS[step];
+  $('ch').className='ch '+st.color;$('cn').textContent=step+1;$('ct').textContent=st.title;
+  let h=st.body;
+  h+=`<div class="do ${mode==='walk'?'watch':''}"><span class="lbl">${mode==='walk'?'WATCH THE SCREEN':'YOUR TASK'}</span><span class="act">${mode==='walk'?st.walk:st.tryT}</span>`;
+  if(mode==='try'&&st.checks)h+=`<ul class="checks" id="checks">${st.checks.map(c=>`<li>${c}</li>`).join('')}</ul>`;
+  h+='</div>'+`<div class="tip ${st.warn?'warn':''}" id="tip" style="display:${done?'block':'none'}"><b>Key takeaway:</b> ${st.tip}</div>`;
+  if(mode==='try')h+=`<div class="fb" id="fb" role="status" aria-live="polite"></div><div class="hintbox" id="hintbox">${st.hint}</div><div class="hints"><button type="button" id="hintBtn">💡 Hint</button></div>`;
+  $('cb').innerHTML=h;
+  if(mode==='try'){$('hintBtn').onclick=()=>{hints++;$('hintbox').classList.add('show');};}
+  $('pill').textContent='Step '+(step+1)+' of 18';
+  $('barfill').style.width=((step+(done?1:0))/18*100)+'%';
+  $('bsub').innerHTML='✎ <b>Knowledge Check</b> — complete each step on the simulated screens, just as you would in the real systems. Hints are available, but they and any incorrect attempts are counted in your results.';
+    $('parts').innerHTML=PARTS.map((p,i)=>`<span class="pt ${STEPS[step].part>i?'ok':(STEPS[step].part===i?'cur':'')}">${STEPS[step].part>i?'✓ ':''}${p}</span>`).join('');
+  syncChecks();
+}
+function renderNav(){
+  const last=step===17;$('back').disabled=step===0||busy;
+  $('next').innerHTML=last?'Start Over ↺':'Next →';
+  const can=mode==='walk'?!busy:(last?done:done);
+  $('next').disabled=!can;$('next').classList.toggle('ready',mode==='try'&&done&&!last);
+}
+let busy=false;
+
+/* ---------- navigation ---------- */
+async function go(n){
+  token++;const tok=token;auto=false;busy=false;step=n;done=false;subs={};hints=hints;
+  $('end').classList.remove('show');$('toast').classList.remove('show');
+  S=stateAt(n);
+  // reset quiz UI
+  if(n<=17){QS.forEach((q,i)=>{const b=$('q'+i);b.querySelectorAll('button').forEach(x=>{x.disabled=false;x.classList.remove('right','wrong');});$('qf'+i).className='qf';});}
+  // reset gap input
+  $('gapIn').value='';
+  renderCard();render();
+  if(mode==='walk'){
+    busy=true;renderNav();auto=true;
+    try{await sleep(450);if(tok!==token)return;await STEPS[n].play();if(tok!==token)return;await sleep(300);}catch(e){return;}
+    finally{if(tok===token){auto=false;}}
+    if(tok!==token)return;
+    done=true;busy=false;render();renderCard();renderNav();
+  }
+}
+function showMe(){
+  hints++;$('hintbox').classList.add('show');if(done)return;
+  const tok=token;auto=true;busy=true;renderNav();
+  STEPS[step].play().catch(()=>{}).then(()=>{if(tok===token){auto=false;busy=false;if(!done&&STEPS[step].test(S))complete(STEPS[step].okMsg);else{render();renderNav();}}});
+}
+$('next').onclick=()=>{if(step===17){hints=0;go(0);return;}go(step+1);};
+$('back').onclick=()=>{if(step>0)go(step-1);};
+function setMode(m){mode='try';hints=0;misses=0;go(0);}
+$('again').onclick=()=>setMode('try');
+
+/* ---------- scaling ---------- */
+function fit(){const vp=$('vp'),sim=$('sim');scale=Math.min(1,vp.clientWidth/1000);sim.style.transform=`scale(${scale})`;vp.style.height=(sim.offsetHeight*scale)+'px';}
+new ResizeObserver(fit).observe($('vp'));new ResizeObserver(fit).observe($('sim'));window.addEventListener('resize',fit);
+
+/* init */
+mode='try';S=stateAt(0);renderCard();render();fit();
+})();
+</script>
+</body>
+</html>
